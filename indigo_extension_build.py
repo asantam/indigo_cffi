@@ -101,123 +101,129 @@ ffibuilder.cdef("""
             INDIGO_ANY_OF_MANY_RULE     ///< checkbox button group like behaviour
     } indigo_rule;
 
+    typedef long long unsigned indigo_token;
+
     /** Property item definition.
-     */
+    */
     typedef struct {/* there is no .name =  because of g++ C99 bug affecting string initialier */
-            char name[INDIGO_NAME_SIZE];        ///< property wide unique item name
-            char label[INDIGO_VALUE_SIZE];      ///< item description in human readable form
-            char hints[INDIGO_VALUE_SIZE];			///< item GUI hints
-            union {
-                    /** Text property item specific fields.
-                     */
-                    struct {
-                            char value[INDIGO_VALUE_SIZE];  ///< item value (for text properties)
-                    } text;
-                    /** Number property item specific fields.
-                     */
-                    struct {/* there is no .name =  because of g++ C99 bug affecting string initialier */
-                            char format[INDIGO_VALUE_SIZE]; ///< item format (for number properties)
-                            double min;                     ///< item min value (for number properties)
-                            double max;                     ///< item max value (for number properties)
-                            double step;                    ///< item increment value (for number properties)
-                            double value;                   ///< item value (for number properties)
-                            double target;									///< item target value (for number properties)
-                    } number;
-                    /** Switch property item specific fields.
-                     */
-                    struct {
-                            bool value;                     ///< item value (for switch properties)
-                    } sw;
-                    /** Light property item specific fields.
-                     */
-                    struct {
-                            indigo_property_state value;    ///< item value (for light properties)
-                    } light;
-                    /** BLOB property item specific fields.
-                     */
-                    struct {
-                            char format[INDIGO_NAME_SIZE];  ///< item format (for blob properties), known file type suffix like ".fits" or ".jpeg"
-                            char url[INDIGO_VALUE_SIZE];		///< item URL on source server
-                            long size;                      ///< item size (for blob properties) in bytes
-                            void *value;                    ///< item value (for blob properties)
-                    } blob;
-            };
+        char name[INDIGO_NAME_SIZE];        ///< property wide unique item name
+        char label[INDIGO_VALUE_SIZE];      ///< item description in human readable form
+        char hints[INDIGO_VALUE_SIZE];          ///< item GUI hints
+        union {
+            /** Text property item specific fields.
+             */
+            struct {
+                char value[INDIGO_VALUE_SIZE];  ///< item value (for text properties)
+            } text;
+            /** Number property item specific fields.
+             */
+            struct {/* there is no .name =  because of g++ C99 bug affecting string initialier */
+                char format[INDIGO_VALUE_SIZE]; ///< item format (for number properties)
+                double min;                     ///< item min value (for number properties)
+                double max;                     ///< item max value (for number properties)
+                double step;                    ///< item increment value (for number properties)
+                double value;                   ///< item value (for number properties)
+                double target;                  ///< item target value (for number properties)
+            } number;
+            /** Switch property item specific fields.
+             */
+            struct {
+                bool value;                     ///< item value (for switch properties)
+            } sw;
+            /** Light property item specific fields.
+             */
+            struct {
+                indigo_property_state value;    ///< item value (for light properties)
+            } light;
+            /** BLOB property item specific fields.
+             */
+            struct {
+                char format[INDIGO_NAME_SIZE];  ///< item format (for blob properties), known file type suffix like ".fits" or ".jpeg"
+                char url[INDIGO_VALUE_SIZE];        ///< item URL on source server
+                long size;                      ///< item size (for blob properties) in bytes
+                void *value;                    ///< item value (for blob properties)
+            } blob;
+        };
     } indigo_item;
 
     /** Property definition.
      */
     typedef struct {
-            char device[INDIGO_NAME_SIZE];      ///< system wide unique device name
-            char name[INDIGO_NAME_SIZE];        ///< device wide unique property name
-            char group[INDIGO_NAME_SIZE];       ///< property group in human readable form (presented as a tab or a subtree in GUI
-            char label[INDIGO_VALUE_SIZE];      ///< property description in human readable form
-            char hints[INDIGO_VALUE_SIZE];			///< property GUI hints
-            indigo_property_state state;        ///< property state
-            indigo_property_type type;          ///< property type
-            indigo_property_perm perm;          ///< property access permission
-            indigo_rule rule;                   ///< switch behaviour rule (for switch properties)
-            short version;                      ///< property version INDIGO_VERSION_NONE, INDIGO_VERSION_LEGACY or INDIGO_VERSION_2_0
-            bool hidden;                        ///< property is hidden/unused by  driver (for optional properties)
-            int count;                          ///< number of property items
-            indigo_item items[];                ///< property items
+        char device[INDIGO_NAME_SIZE];      ///< system wide unique device name
+        char name[INDIGO_NAME_SIZE];        ///< device wide unique property name
+        char group[INDIGO_NAME_SIZE];       ///< property group in human readable form (presented as a tab or a subtree in GUI
+        char label[INDIGO_VALUE_SIZE];      ///< property description in human readable form
+        char hints[INDIGO_VALUE_SIZE];          ///< property GUI hints
+        indigo_property_state state;        ///< property state
+        indigo_property_type type;          ///< property type
+        indigo_property_perm perm;          ///< property access permission
+        indigo_rule rule;                   ///< switch behaviour rule (for switch properties)
+        indigo_token access_token;  ///< allow change request on locked device
+        short version;                      ///< property version INDIGO_VERSION_NONE, INDIGO_VERSION_LEGACY or INDIGO_VERSION_2_0
+        bool hidden;                        ///< property is hidden/unused by  driver (for optional properties)
+        int count;                          ///< number of property items
+        indigo_item items[];                ///< property items
     } indigo_property;
 
-/** Client structure definition
- */
+    /** Client structure definition
+     */
     typedef struct indigo_client {
-            char name[INDIGO_NAME_SIZE];
-            bool is_remote;
-            void *client_context;
-            indigo_result last_result;
-            indigo_version version;
-            indigo_enable_blob_mode_record *enable_blob_mode_records;	///< enable blob mode
+        char name[INDIGO_NAME_SIZE];                                                            ///< client name
+        bool is_remote;                                                                                     ///< is remote client
+        void *client_context;                                                                           ///< any client specific data
+        indigo_result last_result;                                                              ///< result of last bus operation
+        indigo_version version;                                                                     ///< client version
+        indigo_enable_blob_mode_record *enable_blob_mode_records;   ///< enable blob mode
 
-            /** callback called when client is attached to the bus
-             */
-            indigo_result (*attach)(indigo_client *client);
-            /** callback called when device broadcast property definition
-             */
-            indigo_result (*define_property)(indigo_client *client, indigo_device *device, indigo_property *property, const char *message);
-            /** callback called when device broadcast property value change
-             */
-            indigo_result (*update_property)(indigo_client *client, indigo_device *device, indigo_property *property, const char *message);
-            /** callback called when device broadcast property removal
-             */
-            indigo_result (*delete_property)(indigo_client *client, indigo_device *device, indigo_property *property, const char *message);
-            /** callback called when device broadcast a message
-             */
-            indigo_result (*send_message)(indigo_client *client, indigo_device *device, const char *message);
-            /** callback called when client is detached from the bus
-             */
-            indigo_result (*detach)(indigo_client *client);
+        /** callback called when client is attached to the bus
+         */
+        indigo_result (*attach)(indigo_client *client);
+        /** callback called when device broadcast property definition
+         */
+        indigo_result (*define_property)(indigo_client *client, indigo_device *device, indigo_property *property, const char *message);
+        /** callback called when device broadcast property value change
+         */
+        indigo_result (*update_property)(indigo_client *client, indigo_device *device, indigo_property *property, const char *message);
+        /** callback called when device broadcast property removal
+         */
+        indigo_result (*delete_property)(indigo_client *client, indigo_device *device, indigo_property *property, const char *message);
+        /** callback called when device broadcast a message
+         */
+        indigo_result (*send_message)(indigo_client *client, indigo_device *device, const char *message);
+        /** callback called when client is detached from the bus
+         */
+        indigo_result (*detach)(indigo_client *client);
     } indigo_client;
 
+    /** Device structure definition
+     */
     typedef struct indigo_device {
-            char name[INDIGO_NAME_SIZE];        ///< device name
-            indigo_glock lock;                  ///< device global lock
-            bool is_remote;                     ///< is remote device
-            uint16_t gp_bits;                   ///< general purpose bits for driver specific usage
-            void *device_context;               ///< any device specific data
-            void *private_data;                 ///< private data
-            indigo_device *master_device;       ///< if the device provides many logical devices, this must point to one of the locical devices, otherwise is safe to be NULL
-            indigo_result last_result;          ///< result of last bus operation
-            indigo_version version;             ///< device version
+        char name[INDIGO_NAME_SIZE];        ///< device name
+        indigo_glock lock;                  ///< device global lock
+        bool is_remote;                     ///< is remote device
+        uint16_t gp_bits;                   ///< general purpose bits for driver specific usage
+        void *device_context;               ///< any device specific data
+        void *private_data;                 ///< private data
+        indigo_device *master_device;       ///< if the device provides many logical devices, this must point to one of the locical devices, otherwise is safe to be NULL
+        indigo_result last_result;          ///< result of last bus operation
+        indigo_version version;             ///< device version
+        indigo_token access_token;  ///< allow change request with correct access token only
 
-            /** callback called when device is attached to bus
-             */
-            indigo_result (*attach)(indigo_device *device);
-            /** callback called when client broadcast enumerate properties request on bus, device and name elements of property can be set NULL to address all
-             */
-            indigo_result (*enumerate_properties)(indigo_device *device, indigo_client *client, indigo_property *property);
-            /** callback called when client broadcast property change request
-             */
-            indigo_result (*change_property)(indigo_device *device, indigo_client *client, indigo_property *property);
-            /** callback called when client broadcast enableBLOB mode change request
-             */
-            indigo_result (*enable_blob)(indigo_device *device, indigo_client *client, indigo_property *property, indigo_enable_blob_mode mode);
-            /** callback called when device is detached from the bus
-             */
-            indigo_result (*detach)(indigo_device *device);
+        /** callback called when device is attached to bus
+         */
+        indigo_result (*attach)(indigo_device *device);
+        /** callback called when client broadcast enumerate properties request on bus, device and name elements of property can be set NULL to address all
+         */
+        indigo_result (*enumerate_properties)(indigo_device *device, indigo_client *client, indigo_property *property);
+        /** callback called when client broadcast property change request
+         */
+        indigo_result (*change_property)(indigo_device *device, indigo_client *client, indigo_property *property);
+        /** callback called when client broadcast enableBLOB mode change request
+         */
+        indigo_result (*enable_blob)(indigo_device *device, indigo_client *client, indigo_property *property, indigo_enable_blob_mode mode);
+        /** callback called when device is detached from the bus
+         */
+        indigo_result (*detach)(indigo_device *device);
     } indigo_device;
 
     typedef unsigned long int pthread_t;
@@ -276,10 +282,19 @@ ffibuilder.set_source("_indigo",  r"""
     indigo_result indigo_disconnect_server(indigo_server_entry *server);
     indigo_result indigo_start();
     """,
-  include_dirs = ['../indigo_libs'],
+  include_dirs = ['../indigo_libs/indigo'],
   library_dirs = ['../indigo_libs'],
   sources = ['indigo_py_adapter.c'],
-  extra_objects = ['../indigo_libs/indigo_client.o', '../indigo_libs/indigo_client_xml.o', '../indigo_libs/indigo_bus.o', '../indigo_libs/indigo_io.o', '../indigo_libs/indigo_xml.o', '../indigo_libs/indigo_version.o', '../indigo_libs/indigo_base64.o']
+  extra_objects = [
+    '../indigo_libs/indigo_client.o', 
+    '../indigo_libs/indigo_client_xml.o', 
+    '../indigo_libs/indigo_bus.o', 
+    '../indigo_libs/indigo_io.o', 
+    '../indigo_libs/indigo_xml.o', 
+    '../indigo_libs/indigo_version.o', 
+    '../indigo_libs/indigo_base64.o',
+    '../indigo_libs/indigo_token.o',
+    ]
 )
 
 
