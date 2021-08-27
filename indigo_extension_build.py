@@ -232,6 +232,7 @@ ffibuilder.cdef("""
             char name[INDIGO_NAME_SIZE];            ///< service name
             char host[INDIGO_NAME_SIZE];            ///< server host name
             int port;                               ///< server port
+            uint32_t connection_id;                 ///< client connection ID
             pthread_t thread;                       ///< client thread ID
             bool thread_started;                    ///< client thread started/stopped
             int socket;                             ///< stream socket
