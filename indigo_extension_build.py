@@ -114,6 +114,8 @@ ffibuilder.cdef("""
              */
             struct {
                 char value[INDIGO_VALUE_SIZE];  ///< item value (for text properties)
+                char *long_value;               ///< item value, set if text is longer than INDIGO_VALUE_SIZE
+                long length;                    ///< text length (including terminating 0)
             } text;
             /** Number property item specific fields.
              */
