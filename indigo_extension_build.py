@@ -163,6 +163,8 @@ ffibuilder.cdef("""
         indigo_token access_token;  ///< allow change request on locked device
         short version;                      ///< property version INDIGO_VERSION_NONE, INDIGO_VERSION_LEGACY or INDIGO_VERSION_2_0
         bool hidden;                        ///< property is hidden/unused by  driver (for optional properties)
+        bool defined;                       ///< property is defined
+        int allocated_count;                ///< number of allocated property items
         int count;                          ///< number of property items
         indigo_item items[];                ///< property items
     } indigo_property;
@@ -240,6 +242,7 @@ ffibuilder.cdef("""
             int socket;                             ///< stream socket
             indigo_device *protocol_adapter;        ///< server protocol adapter
             char last_error[256];		    ///< last error reported within client thread
+            bool shutdown;                          ///< request shutdown
     } indigo_server_entry;
 
 
