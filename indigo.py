@@ -253,7 +253,7 @@ def update_property_cb(client, device, propPtr, message):
     return 0
 
 @ffi.def_extern()
-def delete_property_cb(client, device, property, message):
+def delete_property_cb(client, device, propPtr, message):
     activeIndigoPy.delete_property(propPtr)
     prop = propPtr[0]
     logging.debug('delete_property: %s %s', ffi.string(prop.device), ffi.string(prop.name))
